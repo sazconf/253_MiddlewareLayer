@@ -117,6 +117,25 @@ app.get('/biodata/:id', validateParams(idSchema), async (req, res) => {
     return successResponse(res, 'Data berhasil diambil', result.rows[0])
 })
 
+app.post('/biodata', validateBody(biodataSchema), async (req, res) => {
+    const { id, nama, nim, kelas } = req.body
+    const columns = ['nama', 'nim', 'kelas']
+    const values = [nama, nim, kelas]
+
+    if (id !== undefined) {
+        columns.unshift('id')
+        values.unshift(id)
+    }
+
+    const placeholders = values.map((_, index) => `$${index + 1}`).join(', ')
+    const result = await req.pool.query(
+        `INSERT INTO biodata (${columns.join(', ')}) VALUES (${placeholders}) RETURNING *`,
+        values
+    )
+
+    return successResponse(res, 'Data berhasil ditambahkan', result.rows[0], 201)
+})
+
 app.use((req, res, next) => {
     const start = Date.now()
 
