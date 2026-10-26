@@ -136,6 +136,25 @@ app.post('/biodata', validateBody(biodataSchema), async (req, res) => {
     return successResponse(res, 'Data berhasil ditambahkan', result.rows[0], 201)
 })
 
+app.put(
+    '/biodata/:id',
+    validateParams(idSchema),
+    validateBody(updateBiodataSchema),
+    async (req, res) => {
+        const { nama, nim, kelas } = req.body
+        const result = await req.pool.query(
+            'UPDATE biodata SET nama = $1, nim = $2, kelas = $3 WHERE id = $4 RETURNING *',
+            [nama, nim, kelas, req.params.id]
+        )
+
+        if (result.rowCount === 0) {
+            return errorResponse(res, 'Data tidak ditemukan', 404)
+        }
+
+        return successResponse(res, 'Data berhasil diperbarui', result.rows[0])
+    }
+)
+
 app.use((req, res, next) => {
     const start = Date.now()
 
