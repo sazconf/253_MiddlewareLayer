@@ -168,6 +168,24 @@ app.delete('/biodata/:id', validateParams(idSchema), async (req, res) => {
     return successResponse(res, 'Data berhasil dihapus', result.rows[0])
 })
 
+app.use((error, req, res, next) => {
+    console.error(error)
+
+    if (res.headersSent) {
+        return next(error)
+    }
+
+    return errorResponse(res, 'Terjadi kesalahan pada server', 500)
+})
+
+if (require.main === module) {
+    app.listen(port, () => {
+        console.log(`Server berjalan pada http://localhost:${port}`)
+    })
+}
+
+module.exports = { app, pool }
+
 app.use((req, res, next) => {
     const start = Date.now()
 
