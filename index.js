@@ -94,6 +94,29 @@ const updateBiodataSchema = biodataSchema
     .fork(['nama', 'nim', 'kelas'], field => field.required())
     .fork(['id'], field => field.forbidden())
 
+app.get('/', async (req, res) => {
+    const result = await req.pool.query('SELECT * FROM biodata ORDER BY id')
+    return successResponse(res, 'Data berhasil diambil', result.rows)
+})
+
+app.get('/biodata', async (req, res) => {
+    const result = await req.pool.query('SELECT * FROM biodata ORDER BY id')
+    return successResponse(res, 'Data berhasil diambil', result.rows)
+})
+
+app.get('/biodata/:id', validateParams(idSchema), async (req, res) => {
+    const result = await req.pool.query(
+        'SELECT * FROM biodata WHERE id = $1',
+        [req.params.id]
+    )
+
+    if (result.rowCount === 0) {
+        return errorResponse(res, 'Data tidak ditemukan', 404)
+    }
+
+    return successResponse(res, 'Data berhasil diambil', result.rows[0])
+})
+
 app.use((req, res, next) => {
     const start = Date.now()
 
