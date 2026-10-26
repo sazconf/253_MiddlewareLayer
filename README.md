@@ -2,6 +2,24 @@
 
 Express.js REST API untuk mengelola data biodata mahasiswa menggunakan PostgreSQL, middleware, validasi Joi, dan error handling.
 
+## Screenshot hasil pengujian
+
+### POST biodata berhasil
+
+![POST biodata berhasil](./screenshots/post-biodata.png)
+
+### GET semua biodata berhasil
+
+![GET semua biodata berhasil](./screenshots/get-biodata.png)
+
+### PUT biodata berhasil
+
+![PUT biodata berhasil](./screenshots/put-biodata.png)
+
+### DELETE biodata berhasil
+
+![DELETE biodata berhasil](./screenshots/delete-biodata.png)
+
 ## Teknologi
 
 - Node.js
@@ -197,37 +215,3 @@ Body berikut akan ditolak karena `nama`, `nim`, dan `kelas` tidak memenuhi atura
 ```
 
 Response validasi menggunakan status `400 Bad Request`.
-
-## Screenshot hasil pengujian
-
-### POST biodata berhasil
-
-![POST biodata berhasil](./screenshots/post-biodata.png)
-
-### GET semua biodata berhasil
-
-![GET semua biodata berhasil](./screenshots/get-biodata.png)
-
-### PUT biodata berhasil
-
-Untuk request PUT, gunakan **Body → raw → JSON**. Jangan masukkan `id` ke dalam body karena ID dikirim melalui URL.
-
-```json
-{
-  "nama": "Sazzad Updated",
-  "nim": "2222222222",
-  "kelas": "E"
-}
-```
-
-![PUT biodata berhasil](./screenshots/put-biodata.png)
-
-### DELETE biodata berhasil
-
-Untuk request DELETE, masukkan ID pada URL dan pilih **Body → none** karena request ini tidak membutuhkan body.
-
-```http
-DELETE http://localhost:3000/biodata/2
-```
-
-![DELETE biodata berhasil](./screenshots/delete-biodata.png)
