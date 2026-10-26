@@ -57,6 +57,43 @@ const idSchema = Joi.object({
     allowUnknown: false
 })
 
+function validationDetails(error) {
+    return error.details.map(item => ({
+        field: item.path.join('.'),
+        message: item.message
+    }))
+}
+
+function validateBody(schema) {
+    return (req, res, next) => {
+        const { error, value } = schema.validate(req.body)
+
+        if (error) {
+            return errorResponse(res, 'Validasi input gagal', 400, validationDetails(error))
+        }
+
+        req.body = value
+        next()
+    }
+}
+
+function validateParams(schema) {
+    return (req, res, next) => {
+        const { error, value } = schema.validate(req.params)
+
+        if (error) {
+            return errorResponse(res, 'Parameter tidak valid', 400, validationDetails(error))
+        }
+
+        req.params = value
+        next()
+    }
+}
+
+const updateBiodataSchema = biodataSchema
+    .fork(['nama', 'nim', 'kelas'], field => field.required())
+    .fork(['id'], field => field.forbidden())
+
 app.use((req, res, next) => {
     const start = Date.now()
 
