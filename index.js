@@ -20,6 +20,24 @@ app.use((req, res, next) => {
     next()
 })
 
+function successResponse(res, message, data, statusCode = 200) {
+    return res.status(statusCode).json({
+        success: true,
+        message,
+        data,
+        error: null
+    })
+}
+
+function errorResponse(res, message, statusCode, details = null) {
+    return res.status(statusCode).json({
+        success: false,
+        message,
+        data: null,
+        error: details
+    })
+}
+
 app.use((req, res, next) => {
     const start = Date.now()
 
