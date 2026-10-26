@@ -13,3 +13,24 @@ const pool = new Pool({
     port: Number(process.env.PGPORT) || 5432
 })
 
+app.use(express.json())
+
+app.use((req, res, next) => {
+    req.pool = pool
+    next()
+})
+
+app.use((req, res, next) => {
+    const start = Date.now()
+
+    res.on('finish', () => {
+        console.log({
+            method: req.method,
+            url: req.originalUrl,
+            status: res.statusCode,
+            duration: `${Date.now() - start}ms`
+        })
+    })
+
+    next()
+})
